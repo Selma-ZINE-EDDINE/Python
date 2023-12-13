@@ -7,10 +7,18 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 #import seaborn as sns
+import dash
+from dash import Dash, dcc, html
 
 import matplotlib.pyplot as plt
 
 from matplotlib import cm
+
+import plotly_express as px
+
+
+#import dash_core_components as dcc
+#import dash_html_components as html
 
 # 2 -Definition des fonctions secondaires
 
@@ -49,19 +57,31 @@ def multicolonne(data,nom1, nom2):
     c= [name for name in data.columns if nom1 or nom2 in name ]
     return data[c]
 
-# 3 -Definition du main() qui appellent les fonctions secondaires
-def main():
 
-    data = read_data_to_dicts('Annual_Surface_Temperature_Change.csv')
 
-    #print(temperatureMoyenne(data,2013))
-    historigramme(data)
-    #print(data)
-    #print(colonne(data,"Indicator"))
-    #print(read_data_to_dicts('Annual_Surface_Temperature_Change.csv'))
     
-    pass
+# 3 -Definition du main() qui appellent les fonctions secondaires
 
 # 4 -Appel protégé du main()
 if __name__ == '__main__':
-    main()
+    app = dash.Dash(__name__)
+
+    df = pd.read_csv('Annual_Surface_Temperature_Change.csv')
+
+    fig = px.scatter(df, x="Country", y="F1981",
+                    size="F1981", color="Country", hover_name="Country",
+                    log_x=True, size_max=60)
+
+    app.layout = html.Div([
+        dcc.Graph(
+            id='life-exp-vs-gdp',
+            figure=fig
+        )
+    ])
+
+    app.run_server(debug=True)
+    #dataHistogramme = read_data_to_dicts('Annual_Surface_Temperature_Change.csv')
+    #historigramme(dataHistogramme)
+
+    #dataGeolocalisation = read_data_to_dicts('Annual_Surface_Temperature_Change.csv')
+    
