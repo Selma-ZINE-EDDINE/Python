@@ -4,7 +4,7 @@
     [Input(component_id='year-dropdown', component_property='value')] # (2)
 )
 def update_figure(input_value): # (3)
-    return px.scatter(data[input_value], x="gdpPercap", y="lifeExp",
+    return px.scatter(data[input_value], x="Émissions de CO2", y="lifeExp",
                     color="continent",
                     size="pop",
                     hover_name="country") # (4)
