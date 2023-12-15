@@ -9,13 +9,13 @@ import plotly.graph_objects as go
 #import seaborn as sns
 import dash
 from dash import Dash, dcc, html
-
+from geopy.geocoders import Nominatim
 import matplotlib.pyplot as plt
 
 from matplotlib import cm
 
 import plotly_express as px
-
+import folium
 
 #import dash_core_components as dcc
 #import dash_html_components as html
@@ -58,30 +58,84 @@ def multicolonne(data,nom1, nom2):
     return data[c]
 
 
+def obtenir_geojson_pays():
+    # Utilisez la bibliothèque GeoPandas pour lire le GeoJSON des frontières des pays
+    world = pd.read_json('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json')
+    return world
+
+
+def obtenir_coordonnees_pays(nom_pays):
+    geolocator = Nominatim(user_agent="mon_application")
+    location = geolocator.geocode(nom_pays)
+    
+    if location:
+        return location.latitude, location.longitude
+    else:
+        print(f"Les coordonnées pour le pays '{nom_pays}' n'ont pas pu être trouvées.")
+        return None
+    
+def colorer_pays(nom_pays, couleur,map):
+    coords = obtenir_coordonnees_pays(nom_pays)
+    
+    if coords:
+        #map = folium.Map(location=coords, tiles='OpenStreetMap', zoom_start=5)
+        
+        # Ajouter un polygone pour représenter les frontières du pays
+        #folium.RegularPolygonMarker(location=coords, fill_color=couleur).add_to(map)
+        folium.Marker(location=coords, icon=folium.Icon(color=couleur)).add_to(carte)
+        # Sauvegarder la carte dans un fichier HTML
+        map.save(outfile=f'map.html')
+        
+        #print(f"Carte pour {nom_pays} générée avec succès.")
+    else:
+        print("Impossible de générer la carte.")
+
+def carte():
+    coords = (0,0)
+    map = folium.Map(location=coords, tiles='OpenStreetMap', zoom_start=2)
+    map.save(outfile='map.html')
+    return map
+
+def pays(chaine):
+    p = chaine.split()
+    return p[0]
+
+def paysPlusChaud(data, map):
+    NomPays= colonne(data,"Country")
+    coeffAugmentation = colonne(data,"F2022")
+    
+    for nom_pays, coef in zip(NomPays, coeffAugmentation):
+        if coef > 1.5:
+            colorer_pays(pays(nom_pays),'red',map)
 
     
 # 3 -Definition du main() qui appellent les fonctions secondaires
-
+def main():
+    data = read_data_to_dicts('Annual_Surface_Temperature_Change.csv')   
+    carte_instance = carte()
+    paysPlusChaud(data, carte_instance)
+    pass
+    #historigramme(data)
 # 4 -Appel protégé du main()
 if __name__ == '__main__':
-    app = dash.Dash(__name__)
+    main()
+    #app = dash.Dash(__name__)
 
-    df = pd.read_csv('Annual_Surface_Temperature_Change.csv')
+    #df = pd.read_csv('Annual_Surface_Temperature_Change.csv')
 
-    fig = px.scatter(df, x="Country", y="F1981",
-                    size="F1981", color="Country", hover_name="Country",
-                    log_x=True, size_max=60)
+    #fig = px.scatter(df, x="Country", y="F1981",
+    #                size="F1981", color="Country", hover_name="Country",
+    #                log_x=True, size_max=60)
 
-    app.layout = html.Div([
-        dcc.Graph(
-            id='life-exp-vs-gdp',
-            figure=fig
-        )
-    ])
+    #app.layout = html.Div([
+    #    dcc.Graph(
+    #        id='life-exp-vs-gdp',
+    #        figure=fig
+    #    )
+    #])
 
-    app.run_server(debug=True)
-    #dataHistogramme = read_data_to_dicts('Annual_Surface_Temperature_Change.csv')
-    #historigramme(dataHistogramme)
+    #app.run_server(debug=True)
 
+    
     #dataGeolocalisation = read_data_to_dicts('Annual_Surface_Temperature_Change.csv')
     
