@@ -112,8 +112,9 @@ def paysPlusChaud(data, map):
 # 3 -Definition du main() qui appellent les fonctions secondaires
 def main():
     data = read_data_to_dicts('Annual_Surface_Temperature_Change.csv')   
-    carte_instance = carte()
-    paysPlusChaud(data, carte_instance)
+    #carte_instance = carte()
+    #paysPlusChaud(data, carte_instance)
+    historigramme(data)
     pass
     #historigramme(data)
 # 4 -Appel protégé du main()
