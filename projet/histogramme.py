@@ -45,7 +45,7 @@ def historigramme(data):
     colors = color_map(np.linspace(0, 1, len(years)))
 
     plt.bar(years, mean_temps, width=2, color=colors, alpha=0.7,edgecolor='black')
-    plt.title('\nThe evolution of average temperatures \n in the world depending on the year\n')
+    plt.title('\nThe evolution of average temperatures change \n in the world depending on the year\n')
     plt.xlabel('Year')
     plt.ylabel('Change in °C from 1951-1980 baseline')
     #plt.style.use('seaborn')
