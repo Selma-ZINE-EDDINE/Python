@@ -17,6 +17,86 @@ def pays(chaine):
     p = chaine.split()
     return p[0]
 
+def match_name(chaine):
+    if "Russian" in chaine:
+        return "Russian"
+    elif "Costa Rica" in chaine:
+        return "Costa Rica"
+    elif "Venezuela" in chaine:
+        return "Venezuela"
+    elif "Dominican Republic" in chaine:
+        return "Dominican Republic"
+    elif "Mauritania" in chaine:
+        return "Mauritania"
+    elif "Ivory" in chaine:
+        return "Ivory Coast"
+    elif "Central African" in chaine:
+        return "Central African Republic"
+    elif "Congo, Dem" in chaine:
+        return "Democratic Republic of the Congo"
+    elif "Tanzania" in chaine:
+        return "United Republic of Tanzania"
+    elif "South Sudan" in chaine:
+        return "South Sudan"
+    elif "Ethiopia" in chaine:
+        return "Ethiopia"
+    elif "Mozambique" in chaine:
+        return "Mozambique"
+    elif "Madagascar" in chaine:
+        return "Madagascar"
+    elif "Egypt" in chaine:
+        return "Egypt"
+    elif "Congo, Rep" in chaine:
+        return "Republic of the Congo"
+    elif "Ethiopia" in chaine:
+        return "Ethiopia"
+    elif "Kazakhstan" in chaine:
+        return "Kazakhstan"
+    elif "Yemen" in chaine:
+        return "Yemen"
+    elif "Korea, Dem" in chaine:
+        return "North Korea"
+    elif "Korea, Rep" in chaine:
+        return "South Korea"
+    elif "Netherlands, The" in chaine:
+        return "Netherlands"
+    elif "Poland" in chaine:
+        return "Poland"
+    elif "Belarus" in chaine:
+        return "Belarus"
+    elif "Estonia" in chaine:
+        return "Estonia"
+    elif "Czech" in chaine:
+        return "Czech Republic"
+    elif "Slovenia" in chaine:
+        return "Slovenia"
+    elif "Croatia" in chaine:
+        return "Croatia"
+    elif "Iran" in chaine:
+        return "Iran"
+    elif "Afghanistan" in chaine:
+        return "Afghanistan"
+    elif "Uzbekistan" in chaine:
+        return "Uzbekistan"
+    elif "Serbia" in chaine:
+        return "Serbia"
+    elif "Macedonia" in chaine:
+        return "Macedonia"
+    elif "Moldova" in chaine:
+        return "Moldova"
+    elif "Kyrgy" in chaine:
+        return "Kyrgysztan"
+    elif "Syria" in chaine:
+        return "Syria"
+    else:
+        return chaine
+
+
+def compatible_F2022(chaine):
+    if "China" in chaine:
+        return
+    return
+
 def carte() :
     script_dir = os.path.dirname(__file__)
     df = pd.read_csv(os.path.join(script_dir,'Annual_Surface_Temperature_Change.csv'))
@@ -27,12 +107,16 @@ def carte() :
     geojson_path = os.path.join(script_dir, 'countries.geojson')
 
     df['text']='Country : '+ df['Country'].astype(str)+'Increasment Coefficient '+ df['F2022'].astype(str)
-  
+    #df['Compatible_Country']
+    df['Compatible_Country']=df['Country'].apply(match_name)
+
+    aggregated_df = df.groupby('Compatible_Country', as_index=False)['F2022'].sum()
+
     cp = folium.Choropleth(
         geo_data=geojson_path,                              # geographical data
         name='Temperature change in the world in 2022',
         data=df,                                  # numerical data
-        columns=[pays('Country'), 'F2022'],                     # numerical data key/value pair
+        columns=['Compatible_Country', 'F2022'],                     # numerical data key/value pair
         key_on='feature.properties.name',       # geographical property used to establish correspondance with numerical data
         fill_color='YlGn',
         fill_opacity=0.7,
@@ -40,7 +124,7 @@ def carte() :
         legend_name='Temperature change coefficient in 2022'
     ).add_to(map)
     
-    df_indexed = df.set_index('Country')
+    df_indexed = df.set_index('Compatible_Country')
 
     for s in cp.geojson.data['features']:
         try:            
