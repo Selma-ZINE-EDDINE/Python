@@ -1,8 +1,8 @@
 import pandas as pd
 import plotly_express as px
 import dash
-import dash_core_components as dcc
-import dash_html_components as html
+from dash import dcc
+from dash import html
 from dash.dependencies import Input, Output
 
 
@@ -10,7 +10,7 @@ gapminder = pd.read_csv('co2-emissions-vs-gdp.csv')
 
 
 years = sorted(gapminder["Year"].unique())
-data = {year: gapminder[gapminder["Year"] == year].dropna(subset=['Population (historical estimates)']) for year in years}
+data = {year: gapminder[gapminder["Year"] == year].dropna(subset=['Population (historical estimates)', 'GDP per capita']) for year in years}
 
 # Main
 app = dash.Dash(__name__)
@@ -27,13 +27,11 @@ app.layout = html.Div(children=[
     dcc.Graph(
         id='graph1',
         figure=px.scatter(data[2007], x="GDP per capita", y="Annual CO₂ emissions (per capita)",
-                          color="Continent", size="Population (historical estimates)", hover_name="Entity")
+                          color="Entity", size="Population (historical estimates)", hover_name="Entity",size_max=100)
     ),
     html.Div(children=f'''
         The graph above shows the relationship between GDP per capita and
-        Annual CO₂ emissions for the year 2007. Each continent's data has its own
-        color, and symbol size is proportional to the country's population.
-        Mouse over for details.
+        Annual CO₂ emissions for the year 2007.
     '''),
 ])
 
@@ -42,14 +40,13 @@ app.layout = html.Div(children=[
     [Input(component_id='year-dropdown', component_property='value')]
 )
 def update_figure(input_value):
-    filtered_data = data[input_value].dropna(subset=['Population (historical estimates)'])
+    filtered_data = data[input_value].dropna(subset=['Population (historical estimates)', 'GDP per capita'])
     return px.scatter(filtered_data, x="GDP per capita", y="Annual CO₂ emissions (per capita)",
                       color="Entity", size="Population (historical estimates)", hover_name="Entity",size_max=100)
 
 # RUN APP
 if __name__ == '__main__':
     app.run_server(debug=True)
-
 
 
 """import dash
