@@ -51,8 +51,36 @@ def historigramme(data):
     #plt.style.use('seaborn')
     plt.show()   
 
+
 def colonne(data, nomColonne):
     return data[nomColonne]
+
+def histogramme():
+    script_dir = os.path.dirname(__file__)
+    data = read_data_to_dicts(os.path.join(script_dir,'Annual_Surface_Temperature_Change.csv'))
+    
+    years = range(1961, 2022,2)
+    mean_temps = [temperatureMoyenne(data, year) for year in years]
+    color_map = cm.get_cmap('Reds')
+    colors = color_map(np.linspace(0, 1, len(years)))
+    nb = len(data)
+
+    fig = px.histogram(data,
+                       x=years,
+                       y=mean_temps, 
+                       nbins=nb,
+                       title='Histogram of world increasment coefficient depending of the year',
+                       labels={'x':'years','y':'world increasment coefficient'},
+                       opacity=0.8,
+                       log_y=True,
+                       color_discrete_sequence=['indianred'],
+                       )
+    fig.update_layout(bargap=0)
+
+
+    return fig
+
+
     
 # 3 -Definition du main() qui appellent les fonctions secondaires
 def main():
@@ -62,6 +90,7 @@ def main():
     data = read_data_to_dicts(os.path.join(script_dir,'Annual_Surface_Temperature_Change.csv'))   
     historigramme(data)
     pass
+
 
 # 4 -Appel protégé du main()
 if __name__ == '__main__':

@@ -11,6 +11,7 @@ import pandas as pd
 import folium
 import plotly.express as px
 import plotly
+import plotly.graph_objects as go
 
 
 def pays(chaine):
@@ -138,6 +139,79 @@ def carte() :
 
     
     map.save(outfile=os.path.join(script_dir, 'map.html'))
+    return cp
+
+def carte_monde() :
+    script_dir = os.path.dirname(__file__)
+    df = pd.read_csv(os.path.join(script_dir,'Annual_Surface_Temperature_Change.csv'))
+    
+    coords = (0,0)
+    map = folium.Map(location=coords, tiles='OpenStreetMap', zoom_start=2)
+    # Construisez le chemin relatif au fichier GeoJSON
+    geojson_path = os.path.join(script_dir, 'countries.geojson')
+
+    df['text']='Country : '+ df['Country'].astype(str)+'Increasment Coefficient '+ df['F2022'].astype(str)
+    #df['Compatible_Country']
+    df['Compatible_Country']=df['Country'].apply(match_name)
+
+
+    fig=go.Figure()
+    fig=px.choropleth(
+        df,
+        geojson=geojson_path,                                                                
+        locations=df['Compatible_Country'],                     
+        key_on='feature.properties.name',       
+        fill_color='YlGn',
+        fill_opacity=0.7,
+        line_opacity=0.2,
+        legend_name='Temperature change coefficient in 2022'
+    ).add_to(map)
+    
+    df_indexed = df.set_index('Compatible_Country')
+
+    for s in fig.geojson.data['features']:
+        try:            
+            s['properties']['F2022']=df_indexed.loc[s['properties']['name'],'F2022']
+        except KeyError:
+            s['properties']['F2022'] = 'error'
+
+
+    folium.GeoJsonTooltip(['F2022','name']).add_to(fig.geojson)
+    folium.LayerControl().add_to(map)
+
+    
+    map.save(outfile=os.path.join(script_dir, 'map.html'))
+    return fig
+
+def carte_plotly():
+    script_dir = os.path.dirname(__file__)
+    df = pd.read_csv(os.path.join(script_dir, 'Annual_Surface_Temperature_Change.csv'))
+    
+    # Construisez le chemin relatif au fichier GeoJSON
+    geojson_path = os.path.join(script_dir, 'countries.geojson')
+
+    df['text'] = 'Country : ' + df['Country'].astype(str) + 'Increasment Coefficient ' + df['F2022'].astype(str)
+    df['Compatible_Country'] = df['Country'].apply(match_name)
+
+
+    fig = go.Figure()
+
+    fig.add_choropleth(
+        geojson=geojson_path,
+        locations=df['Compatible_Country'],
+        z=df['F2022'],
+        colorscale='YlGn',
+        colorbar_title='Temperature change coefficient in 2022',
+        featureidkey='feature.properties.name',
+        text=df['text'],
+        hoverinfo='location+text',
+    )
+    fig.update_layout(
+        geo_scope='world'
+    )
+
+    return fig
+
 
 def main() :
     carte()
