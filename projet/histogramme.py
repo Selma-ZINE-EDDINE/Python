@@ -75,7 +75,7 @@ def histogramme():
                        x=years,
                        y=mean_temps, 
                        nbins=nb,
-                       #title='Histogram of world increasment coefficient depending of the year',
+                       barmode='relative',
                        labels={'x':'years','y':'world increasment coefficient'},
                        opacity=0.8,
                        log_y=True,

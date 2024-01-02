@@ -26,9 +26,9 @@ app2 = dash.Dash(__name__)
 
 #Constructor
 app2.layout = html.Div(children=[
-    html.H1(children='Temperature Change in the world'),
+    html.H1(children='Temperature change in the world'),
     html.Div(children=f'''
-            The dashboard higlights the temperature change in the world and the consequences on 
+            The dashboard higlights the temperature change in the world and the consequences  of C02 emissons 
              life expectancy.
         '''),
     #carte
@@ -46,7 +46,7 @@ app2.layout = html.Div(children=[
      html.Div(children=[
         html.H2(children='2 - Histogram of world increasment coefficient depending of the year'), 
         html.Div(children=f'''
-            The histogram show that the temperature increase faster and faster.
+            The histogram shows that the temperature increase faster and faster.
         '''),
         dcc.Graph(
             id='histogramme',
@@ -75,7 +75,11 @@ app2.layout = html.Div(children=[
         ),
         
         ]),
-
+    html.Div(children=f'''
+            To conclude, despides the consequence of C02 emissions to our life expectancy
+             and the consequence of climate change, the pollution and the temperature continue to increase faster and faster
+             which increase temperature in the entire world.
+        '''),
 ])
 
 # Add controls to build the interaction
