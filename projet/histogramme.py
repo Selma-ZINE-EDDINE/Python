@@ -14,6 +14,7 @@ from geopy.geocoders import Nominatim
 import matplotlib.pyplot as plt
 
 from matplotlib import cm
+from matplotlib.figure import Figure
 
 import plotly_express as px
 import folium
@@ -55,28 +56,36 @@ def historigramme(data):
 def colonne(data, nomColonne):
     return data[nomColonne]
 
+
 def histogramme():
     script_dir = os.path.dirname(__file__)
     data = read_data_to_dicts(os.path.join(script_dir,'Annual_Surface_Temperature_Change.csv'))
     
-    years = range(1961, 2022,2)
+    years = range(1961, 2022)
     mean_temps = [temperatureMoyenne(data, year) for year in years]
     color_map = cm.get_cmap('Reds')
     colors = color_map(np.linspace(0, 1, len(years)))
     nb = len(data)
+    #data["mean_temps"] = mean_temps.astype(str)
+    #data["mean_temps"] = mean_temps.astype(float)
+    col=[]
 
+    #col = mean_temps.astype(str)
     fig = px.histogram(data,
                        x=years,
                        y=mean_temps, 
                        nbins=nb,
-                       title='Histogram of world increasment coefficient depending of the year',
+                       #title='Histogram of world increasment coefficient depending of the year',
                        labels={'x':'years','y':'world increasment coefficient'},
                        opacity=0.8,
                        log_y=True,
-                       color_discrete_sequence=['indianred'],
+                       color = years
+                       #color_discrete_sequence=['indianred'],
                        )
-    fig.update_layout(bargap=0)
-
+    
+    fig.update_layout( yaxis_title="world increasment coefficient" ) #pour ne pas avoir "sum of ..."
+    #fig = px.colors.sequential.
+    #fig.update_layout(bargap=0)
 
     return fig
 
