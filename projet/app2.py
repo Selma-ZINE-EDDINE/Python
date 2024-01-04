@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output
 import os
 
 import cartemonde
-from cartemonde import carte, carte_plotly
+from cartemonde import carte_essaie, carte_plotly
 
 import histogramme
 
@@ -39,7 +39,7 @@ app2.layout = html.Div(children=[
         '''),
         dcc.Graph(
            id='map-graph',
-           figure=carte_plotly()  
+           figure=carte_essaie()  
         )]),  
 
     #histogramme
@@ -92,7 +92,7 @@ def update_figure(input_value):
     return px.scatter(filtered_data, x="CO2 emissions (metric tons per capita)", y="Life expectancy - Sex: all - Age: at birth - Variant: estimates",
                       color="Continent", hover_name="Entity")
 def display_map():
-    return carte_plotly()
+    return carte_essaie()
 
 
 

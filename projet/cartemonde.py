@@ -12,7 +12,8 @@ import folium
 import plotly.express as px
 import plotly
 import plotly.graph_objects as go
-
+import json
+import plotly.io as pio
 
 def pays(chaine):
     p = chaine.split()
@@ -212,9 +213,49 @@ def carte_plotly():
 
     return fig
 
+def mappe(x, state_id_map):
+    # Fonction pour mapper les noms des pays aux noms compatibles du geojson
+    return state_id_map.get(x, None)
+
+def carte_essaie():
+    pio.renderers.default = 'browser'
+    script_dir = os.path.dirname(__file__)
+
+    df = pd.read_csv(os.path.join(script_dir,'Annual_Surface_Temperature_Change.csv'))  
+    #geojson_path = os.path.join(script_dir, 'countries.geojson')
+
+    geo = json.load(open(os.path.join(script_dir, 'countries.geojson'),"r"))
+    
+
+    state_id_map = {} #servira à mapper les noms des pays à ceux de la dataframe
+    for feature in geo["features"]:
+        feature["id"] = feature["properties"]["name"] #ajoute id qui est la cle associé aux noms des pays du geojson
+        state_id_map[feature["properties"]["name"]]=feature["id"] #lie la cle au nom du pays
+
+    df['Compatible_Country'] = df['Country'].apply(match_name).apply(lambda x: mappe(x, state_id_map))
+
+    #df["F2022"] = df["F2022"].apply(lambda x: x.replace(",", ""))
+
+
+    #df['id']=df["Compatible_Country"].apply(lambda x: state_id_map[x]) #lie la cle au nom compatible du pays
+
+    # Filtrer les lignes où Compatible_Country est None (pays non reconnu)
+    df = df[df['Compatible_Country'].notna()]
+
+    # Ajouter l'ID uniquement pour les pays reconnus
+    df['id'] = df["Compatible_Country"].apply(lambda x: state_id_map[x])
+
+    fig=px.choropleth(
+        df,
+        locations='id',
+        geojson=geo,                                                                          
+        color='F2022',                         
+    )
+    #fig.show()
+    return fig
 
 def main() :
-    carte()
+    carte_essaie()
     pass
 
 if __name__ == '__main__':
