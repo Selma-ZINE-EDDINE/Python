@@ -139,7 +139,7 @@ def carte() :
 
     
     map.save(outfile=os.path.join(script_dir, 'map.html'))
-    return cp
+    return map
 
 def carte_monde() :
     script_dir = os.path.dirname(__file__)

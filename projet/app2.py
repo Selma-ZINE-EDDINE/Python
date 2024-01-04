@@ -92,7 +92,7 @@ def update_figure(input_value):
     return px.scatter(filtered_data, x="CO2 emissions (metric tons per capita)", y="Life expectancy - Sex: all - Age: at birth - Variant: estimates",
                       color="Continent", hover_name="Entity")
 def display_map():
-    return carte_plotly
+    return carte_plotly()
 
 
 
