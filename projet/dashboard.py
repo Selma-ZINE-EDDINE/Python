@@ -6,10 +6,7 @@ from dash import html
 from dash.dependencies import Input, Output
 import os
 
-import cartemonde
-from cartemonde import carte_essaie, carte_plotly
-
-import histogramme
+import graphiques
 
 
 script_dir = os.path.dirname(__file__)
@@ -39,7 +36,7 @@ app2.layout = html.Div(children=[
         '''),
         dcc.Graph(
            id='map-graph',
-           figure=carte_essaie()  
+           figure=graphiques.carte()  
         )]),  
 
     #histogramme
@@ -50,7 +47,7 @@ app2.layout = html.Div(children=[
         '''),
         dcc.Graph(
             id='histogramme',
-            figure=histogramme.histogramme()
+            figure=graphiques.histogramme()
         )]),  
 
     #graphique élémentaire
@@ -91,9 +88,6 @@ def update_figure(input_value):
     filtered_data = data[input_value].dropna(subset=['Life expectancy - Sex: all - Age: at birth - Variant: estimates', 'CO2 emissions (metric tons per capita)'])
     return px.scatter(filtered_data, x="CO2 emissions (metric tons per capita)", y="Life expectancy - Sex: all - Age: at birth - Variant: estimates",
                       color="Continent", hover_name="Entity")
-def display_map():
-    return carte_essaie()
-
 
 
 # RUN app2
