@@ -25,8 +25,7 @@ app2 = dash.Dash(__name__)
 app2.layout = html.Div(children=[
     html.H1(children='Temperature change in the world'),
     html.Div(children=f'''
-            The dashboard higlights the temperature change in the world and the consequences  of C02 emissons 
-             life expectancy.
+            The dashboard higlights the consequences of pollution. It show the temperature change and the impact of carbon emission.
         '''),
     #carte
     html.Div(children=[
