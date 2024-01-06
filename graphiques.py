@@ -6,7 +6,6 @@ import os
 import json
 import pandas as pd
 import plotly_express as px
-import plotly.express as px
 import plotly.io as pio
 
 # 2 -Definition des fonctions secondaires
