@@ -202,6 +202,7 @@ def histogramme():
                        color_discrete_map = {'coefficient < 0':'blue',
                                             '0 < coefficient < 1':'orange',
                                             '1 < coefficient':'red'},
+                        title="Histogram of world increasment coefficient depending of the year",
                        )
 
     fig.update_layout( yaxis_title="world increasment coefficient" )#pour ne pas avoir "sum of ..."
@@ -252,6 +253,7 @@ def carte():
         locations='id',
         geojson=geo,
         color='F2022',
+        title="Map of temperature coefficient change in 2022",
     )
 
     return fig
@@ -285,6 +287,7 @@ def graphele():
     fig = px.scatter(data[2007],
                     x="CO2 emissions (metric tons per capita)",
                     y="Life expectancy - Sex: all - Age: at birth - Variant: estimates",
-                    color="Continent", hover_name="Entity")
+                    color="Continent", hover_name="Entity",
+                    title="Relationship between C02 emissions and life expectancy",)
 
     return fig, data, years
