@@ -123,9 +123,15 @@ def match_name(chaine):
         return "Kyrgysztan"
     elif "Syria" in chaine:
         return "Syria"
+    elif "China, P.R.: Mainland" in chaine:
+        return "China"
+    elif "United States"==chaine:
+        return "United States of America"
     else:
         return chaine
     
+
+
 def mappe(x, state_id_map):
     """
     Mappe les noms des pays aux noms compatibles du geojson.
@@ -200,7 +206,7 @@ def carte():
     #apply(match_name) permet de convertir les noms des pays df à ceux correspondant  dans geo
     #apply(lambda x: mappe(x, state_id_map)) permet d'éviter les bugs pour les noms des pays que match_name n'a pas permis de renommer tel que dans geo
     df['Compatible_Country'] = df['Country'].apply(match_name).apply(lambda x: mappe(x, state_id_map))
-
+    
     # Filtrer les lignes où Compatible_Country est None (pays non reconnu)
     df = df[df['Compatible_Country'].notna()]
 
