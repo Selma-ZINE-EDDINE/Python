@@ -1,3 +1,6 @@
+'''
+Gère l'interactivité du dashboard.
+'''
 # 1 -Import et definitions des variables globales
 import plotly_express as px
 from dash.dependencies import Input, Output
@@ -30,8 +33,9 @@ def interactivite(app):
     
         """
         #graphele()[1] = data
-        filtered_data = graphiques.graphele()[1][input_value].dropna(subset=['Life expectancy - Sex: all - Age: at birth - Variant: estimates', 'CO2 emissions (metric tons per capita)'])
-        return px.scatter(filtered_data, x="CO2 emissions (metric tons per capita)", y="Life expectancy - Sex: all - Age: at birth - Variant: estimates",
+        filtered_data = graphiques.graphele()[1][input_value].dropna(
+            subset=['Life expectancy - Sex: all - Age: at birth - Variant: estimates',
+                    'CO2 emissions (metric tons per capita)'])
+        return px.scatter(filtered_data, x="CO2 emissions (metric tons per capita)",
+                        y="Life expectancy - Sex: all - Age: at birth - Variant: estimates",
                         color="Continent", hover_name="Entity")
-    
-

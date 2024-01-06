@@ -1,5 +1,6 @@
 '''
-Génère un dashboard présentant des graphiques montrant l'impact négatif de la pollution dans le monde.
+Génère un dashboard présentant des graphiques montrant
+l'impact négatif de la pollution dans le monde.
 '''
 # 1 -Import et definitions des variables globales
 import dash
@@ -16,24 +17,25 @@ app = dash.Dash(__name__)
 # 3 - Constructor
 app.layout = html.Div(children=[
     html.H1(children='Temperature change in the world'),
-    html.Div(children=f'''
+    html.Div(children='''
             The dashboard higlights the consequences of pollution. It shows the temperature change and the impact of carbon emission.
         '''),
     # carte
     html.Div(children=[
-        html.H2(children='1 - Map of temperature change coefficient in 2022'),
-        html.Div(children=f'''
+        html.H2(children='1 - Map of temperature coefficient change in 2022'),
+        html.Div(children='''
             The map higlights that almost all countries are concerned by temperature change.
         '''),
         dcc.Graph(
            id='map-graph',
-           figure=graphiques.carte()
+           figure=graphiques.carte(),
+           style={"height": 700}
         )]),
 
     # histogramme
      html.Div(children=[
         html.H2(children='2 - Histogram of world increasment coefficient depending of the year'),
-        html.Div(children=f'''
+        html.Div(children='''
             The histogram shows that the temperature increase faster and faster.
         '''),
         dcc.Graph(
@@ -44,7 +46,7 @@ app.layout = html.Div(children=[
     # graphique élémentaire
     html.Div([
         html.H2(children='3 - Relationship between C02 emissions and life expectancy'),
-        html.Div(children=f'''
+        html.Div(children='''
             The graph above shows the relationship between C02 emissions and
             life expectancy.
         '''),
@@ -52,7 +54,8 @@ app.layout = html.Div(children=[
         dcc.Dropdown(
             id="year-dropdown",
             options=[
-                {'label': str(year), 'value': year} for year in graphiques.graphele()[2]#graphele()[2] = years
+                {'label': str(year), 'value': year} for year in
+                graphiques.graphele()[2]#graphele()[2] = years
             ],
             value=2007,
         ),
@@ -61,7 +64,7 @@ app.layout = html.Div(children=[
             figure=graphiques.graphele()[0]     #graphele()[0] = fig
         ),
         ]),
-    html.Div(children=f'''
+    html.Div(children='''
              To conclude, year by year, the temperature increase faster and faster in the entire world.
              Moreover, the CO2 emission reduce our life expectancy. So, government must put in place
              strict rules to protect our life and our planet.
@@ -70,7 +73,6 @@ app.layout = html.Div(children=[
 
 # 4 - Add controls to build the interaction
 interactivite(app)
-
 
 #5 - RUN app
 if __name__ == '__main__':
